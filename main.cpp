@@ -99,7 +99,13 @@ int main() {
 
     // Displays a question to the user
     cout << userName << " What is " << leftNum << " " << mathSymbol << " " << rightNum << " =  ";
-    cin >> userAnswer;
+    // Loop until  the user enters numeric data
+    while (!(cin >> userAnswer)) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "\tInvalid input!" << endl;
+        cout << "\tPlease enter a number: ";
+    }
 
     // Check if the answer is correct
     if (userAnswer == correctAnswer) {
