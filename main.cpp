@@ -29,7 +29,7 @@ int main() {
     int correctAnswer = 0;
     int userAnswer = 0;
     int temp = 0;
-
+    string userInput;
     // Seed the random number generator for randomness
     srand(static_cast<unsigned int>(time(0)));
 
@@ -53,69 +53,88 @@ int main() {
     cout << "Please enter your full name: ";
     getline(cin, userName);
 
-    // Generate random numbers and math type
-    leftNum = rand() % 10 + 1;  // Random number between 1 and 10
-    rightNum = rand() % 10 + 1; // Random number between 1 and 10
-    mathType = static_cast<MathType>(rand() % 4 + 1);  // Random math type between 1 and 4
+    do {
+        // Generate random numbers and math type
+        leftNum = rand() % 10 + 1;  // Random number between 1 and 10
+        rightNum = rand() % 10 + 1; // Random number between 1 and 10
+        mathType = static_cast<MathType>(rand() % 4 + 1);  // Random math type between 1 and 4
 
-    // testing default
-    // mathType = static_cast<MathType>(5);
+        // testing default
 
-    // Switch based on the enum MathType
-    switch (mathType) {
-        case ADD:  // Addition
-            correctAnswer = leftNum + rightNum;
+
+        // Switch based on the enum MathType
+        switch (mathType) {
+            case ADD:  // Addition
+                correctAnswer = leftNum + rightNum;
             mathSymbol = '+';
             break;
 
-        case SUB:  // Subtraction
-            // To make sure leftNum is greater than rightNum
-            if (leftNum < rightNum) {
-                temp = leftNum;
-                leftNum = rightNum;
-                rightNum = temp;
-            }
+            case SUB:  // Subtraction
+                // To make sure leftNum is greater than rightNum
+                    if (leftNum < rightNum) {
+                        temp = leftNum;
+                        leftNum = rightNum;
+                        rightNum = temp;
+                    }
             correctAnswer = leftNum - rightNum;
             mathSymbol = '-';
             break;
 
-        case MULT:  // Multiplication
-            correctAnswer = leftNum * rightNum;
+            case MULT:  // Multiplication
+                correctAnswer = leftNum * rightNum;
             mathSymbol = '*';
             break;
 
-        case DIV:  // Division
-            correctAnswer = leftNum;
+            case DIV:  // Division
+                correctAnswer = leftNum;
             leftNum *= rightNum;
             mathSymbol = '/';
             break;
 
-        default:
-            cout << "Error! Wrong math type: " << mathType << endl;
+            default:
+                cout << "Error! Wrong math type: " << mathType << endl;
             cout << "Program ended with a -1 error" << endl;
             cout << "Please contact support for help." << endl;
             return -1;
-    }
+        }
 
-    // Displays a question to the user
-    cout << userName << " What is " << leftNum << " " << mathSymbol << " " << rightNum << " =  ";
-    // Loop until  the user enters numeric data
-    while (!(cin >> userAnswer)) {
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        cout << "\tInvalid input!" << endl;
-        cout << "\tPlease enter a number: ";
-    }
+        // Displays a question to the user
+        cout << userName << " What is " << leftNum << " " << mathSymbol << " " << rightNum << " =  ";
+        // Loop until  the user enters numeric data
+        while (!(cin >> userAnswer)) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "\tInvalid input!" << endl;
+            cout << "\tPlease enter a number: ";
+        }
 
-    // Check if the answer is correct
-    if (userAnswer == correctAnswer) {
-        cout << "Congrats! Nice job, " << userName << "!" << endl;
-    } else {
-        cout << "Sorry. The correct answer was " << correctAnswer << ". Better luck next time, " << userName << "." << endl;
-    }
+        // Check if the answer is correct
+        if (userAnswer == correctAnswer) {
+            cout << "Congrats! Nice job, " << userName << "!" << endl;
+        } else {
+            cout << "Sorry. The correct answer was " << correctAnswer << ". Better luck next time, " << userName << "." << endl;
+            // breaker before do-while
+            // validates y, yes, n, no
+            while (true) {
+                cout << "Do you want to continue (y-yes | n-no)? ";
+                getline(cin, userInput);
+                for (int i = 0; i < userInput.size(); i++) {
+                    userInput.at(i) = toupper(userInput.at(i)); //include ctype library for tolower
+                }
+                if (userInput == "y" || userInput == "yes" ||
+                    userInput == "n" || userInput == "no") {
+                    break;
+                    } else {
+                        cout << "Invalid input, please try again..." << endl;
+                        cout << endl;
+                    } while(userInput == "yes" || userInput == "y");
 
-    // Closing message
-    cout << "Thank you for playing the Silly Simple Math Tutor. Goodbye!" << endl;
 
-    return 0;
+                // Closing message
+                cout << "Thank you for playing the Silly Simple Math Tutor. Goodbye!" << endl;
+
+                return 0;
+            }
+        }
+    }while(userAnswer != correctAnswer);
 }
