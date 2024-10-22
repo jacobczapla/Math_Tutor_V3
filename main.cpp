@@ -100,15 +100,13 @@ int main() {
                 return -1;
         }
 
-        // Display the question to the user
-        cout << userName << ", What is " << leftNum << " " << mathSymbol << " " << rightNum << " =  ";
+        // Display the question to the user and level
+        cout << "[Level #" << mathLevel << "] " << userName << ", What is " << leftNum << " " << mathSymbol << " " << rightNum <<" = ";
 
         // Track attempts
-        int attempts = 0;
         bool isCorrect = false;
 
-        // Loop for MAX_ATTEMPTS
-        while (attempts < MAX_ATTEMPTS) {
+        for (int i = 1; i <= MAX_ATTEMPTS; i++) {
             // Loop until  the user enters numeric data
             while (!(cin >> userAnswer)) {
                 cin.clear();
@@ -124,17 +122,30 @@ int main() {
                 isCorrect = true;
                 break; // Correct answer, exit attempts loop
             } else {
-                attempts++;
-                if (attempts < MAX_ATTEMPTS) {
-                    cout << "Sorry. Try again. Attempts left: " << MAX_ATTEMPTS - attempts << endl;
+                if (i == MAX_ATTEMPTS) {
+                    cout << "The correct answer was " << correctAnswer << ". Better luck next time, " << userName << "!" << endl;
+                    totalIncorrect++;
+                } else {
+                    cout << "Sorry. Try again. Attempts left: " << MAX_ATTEMPTS - i << endl;
                 }
             }
         }
 
-        // After all attempts
-        if (!isCorrect) {
-            cout << "The correct answer was " << correctAnswer << ". Better luck next time, " << userName << "." << endl;
-            totalIncorrect++;
+        // Leveling up or down logic
+        if (totalCorrect == 3) {
+            // Level up
+            mathLevel++;
+            totalCorrect = 0;
+            totalIncorrect = 0;
+            currentRange += LEVEL_RANGE_CHANGE;
+            cout << "Great job! You've leveled up to level " << mathLevel << "! Your new range is 1 to " << currentRange << "." << endl;
+        } else if (totalIncorrect == 3 && mathLevel > 1) {
+            // Level down
+            mathLevel--;
+            totalCorrect = 0;
+            totalIncorrect = 0;
+            currentRange -= LEVEL_RANGE_CHANGE;
+            cout << "You've leveled down to level " << mathLevel << ". Keep practicing! Your new range is now 1 to " << currentRange << "." << endl;
         }
 
         // Ask if user wants to continue
@@ -155,17 +166,6 @@ int main() {
             } else {
                 cout << "Invalid input, please try again..." << endl;
             }
-        }
-
-        // Adjust math level and range
-        if (totalCorrect > totalIncorrect) {
-            mathLevel++;
-            currentRange += LEVEL_RANGE_CHANGE;
-            cout << "Nice Job! You've leveled up to level " << mathLevel << "!" << endl;
-        } else if (totalIncorrect > totalCorrect) {
-            mathLevel = max(1, mathLevel - 1); // Doesn't allow level to drop below 1
-            currentRange = max(LEVEL_RANGE_CHANGE, currentRange - LEVEL_RANGE_CHANGE);
-            cout << "You've leveled down to level " << mathLevel << ". Keep practicing!" << endl;
         }
 
     } while (true);
